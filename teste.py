@@ -1,1 +1,0 @@
-print("Teste Bárbara Chata")
