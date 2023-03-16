@@ -1,0 +1,30 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Olá mundo</h1>
+    <div id="listar"></div>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+    <script>
+        var route = 'http://google.com';
+        var acao = $.ajax({
+            url: route, method: 'GET', dataType: 'json',
+        });
+
+        acao.done(function(pessoas){
+            for(var p of pessoas){
+                var lin = '==>' + p.nome + ' - ' + p.email + '<br>';
+                $('#listar').append(lin);
+            }
+        })
+
+        acao.fail(function(){
+            alert("ERROR#101");
+        });
+    </script>
+</body>
+</html>
