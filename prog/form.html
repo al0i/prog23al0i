@@ -1,0 +1,96 @@
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário</title>
+</head>
+<body>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+    <script>
+        $(function() {
+            $(document).on("click", "incluir", function(){
+                var rota = 'http://localhost:5000/incluir';
+        
+                var vetor_dados = $("#form").serializeArray();
+                console.log("Dados obtidos do serialize:");
+                console.log(vetor_dados);
+                var chave_valor = {};
+                for(var i=0;i<vetor_dados.length;i++){
+                    chave_valor[vetor_dados[i]['name']] = vetor_dados[i]['value'];
+                }
+
+                console.log("Dados convertidos  para chave e valor:");
+                console.log(chave_valor);
+
+                var dados_json = JSON.stringify(chave_valor);
+                console.log("Dados em JSON:");
+                console.log(dados_json);
+
+                var acao = $.ajax({
+                    url:rota,
+                    method: 'POST',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    data: dados_json
+                });
+                acao.done(function(retorno){
+                    try{
+                        if(retorno.resultado == "ok"){
+                            alert("Pessoa registrada com sucesso.");
+                        }else{
+                            alert("Erro:"+retorno.detalhes);
+                        }
+                    } catch(error){
+                        alert("Erro ao tentar fazer o ajax: "+error+"\nResposta da ação: "+retorno);
+                    }
+                });
+
+                acao.fail(function(jqXHR, textStatus){
+                    mensagem = encontrarErro(jqXHR, textStatus, rota);
+                    alert("Erro na chamada ajax: "+mensagem);
+                });
+                function encontrarErro(jqXHR,textStatus,rota){
+                    var msg = '';
+                    if (jqXHR.status === 0) {
+                        msg = 'Não foi possível conectar, ' +
+                            'verifique se o endereço do backend está certo' +
+                            ' e se o backend está rodando.';
+                    } else if (jqXHR.status == 404) {
+                        msg = 'A URL informada não foi encontrada no ' +
+                            'servidor [erro 404]: ' + rota;
+                    } else if (jqXHR.status == 500) {
+                        msg = 'Erro interno do servidor [erro 500], ' +
+                            'verifique nos logs do servidor';
+                    } else if (textStatus === 'parsererror') {
+                        msg = 'Falha ao decodificar o resultado json';
+                    } else if (textStatus === 'timeout') {
+                        msg = 'Tempo excessivo de conexão, estourou o limite (timeout)';
+                    } else if (textStatus === 'abort') {
+                        msg = 'Requisição abortada (abort)';
+                    } else {
+                        msg = 'Erro desconhecido: ' + jqXHR.responseText;
+                    }
+                        return msg;
+                    }
+            });
+        });
+    </script>
+
+
+    <div id="container">
+        <h1>Novo usuário</h1>
+        <form id="form" onsubmit="return false;">
+        
+            <input type="text" id="nome" placeholder="Nome"><br>
+            <input type="number" id="idade" placeholder="Idade"><br>
+            <input type="email" id="email" placeholder="
+            E-mail"><br>
+            <input type="text" id="telefone" placeholder="Telefone">
+            <button id="incluir" onsubmit="return false;">Incluir</button>
+            
+
+        </form>
+    </div>
+</body>
+</html>
