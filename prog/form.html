@@ -9,12 +9,13 @@
     <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
     <script>
         $(function() {
-            $(document).on("click", "incluir", function(){
+            $(document).on("click", "#incluir", function(){
                 var rota = 'http://localhost:5000/incluir';
         
                 var vetor_dados = $("#form").serializeArray();
                 console.log("Dados obtidos do serialize:");
                 console.log(vetor_dados);
+                
                 var chave_valor = {};
                 for(var i=0;i<vetor_dados.length;i++){
                     chave_valor[vetor_dados[i]['name']] = vetor_dados[i]['value'];
@@ -82,11 +83,10 @@
         <h1>Novo usuário</h1>
         <form id="form" onsubmit="return false;">
         
-            <input type="text" id="nome" placeholder="Nome"><br>
-            <input type="number" id="idade" placeholder="Idade"><br>
-            <input type="email" id="email" placeholder="
-            E-mail"><br>
-            <input type="text" id="telefone" placeholder="Telefone">
+            <input type="text" id="nome" name="nome" placeholder="Nome"><br>
+            <input type="number" id="idade" name="idade" placeholder="Idade"><br>
+            <input type="email" id="email" name="email" placeholder="E-mail"><br>
+            <input type="text" id="telefone" name="telefone" placeholder="Telefone"><br>
             <button id="incluir" onsubmit="return false;">Incluir</button>
             
 

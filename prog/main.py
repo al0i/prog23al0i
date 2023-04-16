@@ -8,7 +8,7 @@ listaPessoas = []
 
 @app.route('/')
 def index():
-    return open('/home/aluno/301  info/prog23al0i/prog/index.html', 'r')
+    return open('C:/Users/mathe/Desktop/pytohn/prog23al0i/prog/index.html', 'r')
 
 @app.route('/incluir', methods=['POST'])
 def incluir():
