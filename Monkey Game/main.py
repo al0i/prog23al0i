@@ -1,7 +1,7 @@
-import pygame, os, random, time
+from config import *
+from player import *
 
 pygame.init()
-path = os.path.dirname(os.path.abspath(__file__))
 
 #window settings
 windowWidth, windowHeight = 1280, 720
@@ -18,28 +18,38 @@ while backgroundWidth < windowWidth and backgroundHeight < windowHeight:
         backgroundWidth = background.get_width()*count
         backgroundHeight = background.get_height()*count
         count+=0.1
+while backgroundWidth > windowWidth and backgroundHeight > windowHeight:
+        backgroundWidth = background.get_width()/count
+        backgroundHeight = background.get_height()/count
+        count+=0.1
 background = pygame.transform.scale(background, (backgroundWidth, backgroundHeight))
 
 #player image (limited at 180x180)
-monkeySprite = pygame.image.load(f'{path}/img/monkey.png')
-monkeySpriteWidth = monkeySprite.get_width()
-monkeySpriteHeight = monkeySprite.get_height()
+monkeySprite = 'monkey.png'
+monkeySpriteLocale = pygame.image.load(f'{path}/img/{monkeySprite}')
+monkeySpriteWidth = monkeySpriteLocale.get_width()
+monkeySpriteHeight = monkeySpriteLocale.get_height()
 count = 1
-while monkeySpriteWidth > 180 or monkeySpriteHeight > 180:
-        monkeySpriteWidth = monkeySprite.get_width()/count
-        monkeySpriteHeight = monkeySprite.get_height()/count
+while monkeySpriteWidth > 130 or monkeySpriteHeight > 130:
+        monkeySpriteWidth = monkeySpriteLocale.get_width()/count
+        monkeySpriteHeight = monkeySpriteLocale.get_height()/count
+        count+=0.1
+while monkeySpriteWidth < 90 or monkeySpriteHeight < 90:
+        monkeySpriteWidth = monkeySpriteLocale.get_width()*count
+        monkeySpriteHeight = monkeySpriteLocale.get_height()*count
         count+=0.1
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y, username):
         super().__init__()
-        self.image, self.imageWidth, self.imageHeight = monkeySprite, monkeySpriteWidth, monkeySpriteHeight
-        self.image = pygame.transform.scale(self.image, (self.imageWidth,self.imageHeight)) #pygame.Surface((self.imageWidth, self.imageHeight)) #
-        self.rect = self.image.get_rect(topleft=(x, y))
         self.username = username
-        self.speed = 15
         self.score = 0
         self.lives = 3
+        self.speed = 15
+
+        self.image, self.imageWidth, self.imageHeight = monkeySpriteLocale, monkeySpriteWidth, monkeySpriteHeight
+        self.image = pygame.transform.scale(self.image, (self.imageWidth,self.imageHeight))
+        self.rect = self.image.get_rect(topleft=(x, y))        
 
     def move(self):
         move = pygame.key.get_pressed()
@@ -49,14 +59,14 @@ class Player(pygame.sprite.Sprite):
             if self.rect.x < 0:
                 pass
             else:
-                self.rect.x -= player.speed
+                self.rect.x -= self.speed
 
         #moving right
         if move[pygame.K_RIGHT] or move[pygame.K_d]:
             if self.rect.x > windowWidth-self.imageWidth:
                 pass
             else:
-                self.rect.x += player.speed
+                self.rect.x += self.speed
 
     def update(self):
         self.move()
@@ -75,10 +85,11 @@ while obstacleSpriteWidth > 50 or obstacleSpriteHeight > 50:
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
+        self.velocity = 1
+
         self.image, self.imageWidth, self.imageHeight = bananaSprite, obstacleSpriteWidth, obstacleSpriteHeight
         self.image = pygame.transform.scale(self.image, (self.imageWidth,self.imageHeight))
         self.rect = self.image.get_rect(topleft=(x, y))
-        self.velocity = 1
 
     def update(self):
         if (self.rect.y >= windowHeight):
@@ -105,8 +116,8 @@ def mainMenu():
     username = ''
     keyList = [pygame.K_0, pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5, pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9, 
            pygame.K_KP0, pygame.K_KP1, pygame.K_KP2, pygame.K_KP3, pygame.K_KP4, pygame.K_KP5, pygame.K_KP6, pygame.K_KP7, pygame.K_KP8, pygame.K_KP9, 
-           pygame.K_a, pygame.K_b, pygame.K_c, pygame.K_d, pygame.K_e, pygame.K_f, pygame.K_g, pygame.K_h, pygame.K_i, pygame.K_j, pygame.K_k, pygame.K_l, pygame.K_m, 
-           pygame.K_n, pygame.K_o, pygame.K_p, pygame.K_q, pygame.K_r, pygame.K_s, pygame.K_t, pygame.K_u, pygame.K_v, pygame.K_w, pygame.K_x, pygame.K_y, pygame.K_z,pygame.K_UNDERSCORE, pygame.K_KP_MINUS, pygame.K_MINUS]
+           pygame.K_a, pygame.K_b, pygame.K_c, pygame.K_d, pygame.K_e, pygame.K_f, pygame.K_g, pygame.K_h, pygame.K_i, pygame.K_j, pygame.K_k, pygame.K_l, pygame.K_m, pygame.K_n, pygame.K_o, pygame.K_p, pygame.K_q, pygame.K_r, pygame.K_s, pygame.K_t, pygame.K_u, pygame.K_v, pygame.K_w, pygame.K_x, pygame.K_y, pygame.K_z,
+           pygame.K_UNDERSCORE, pygame.K_KP_MINUS, pygame.K_MINUS]
 
     inputRect = pygame.Rect(windowWidth/2-64, windowHeight/2-16, 100, 32)
 
@@ -124,7 +135,6 @@ def mainMenu():
                     username += event.unicode
             
         if pygame.key.get_pressed()[pygame.K_RETURN] or pygame.key.get_pressed()[pygame.K_KP_ENTER]:
-            username = username[:-1]
             username = username.encode('ascii', 'ignore').decode('utf-8')
             if len(username) > 32:
                 username = username[0:32]
@@ -170,32 +180,116 @@ def game():
             randomY = random.randint(0, windowHeight)
             trashGroup.add(Trash(randomX, randomY-windowHeight))
 
+        for i in bananaGroup:
+            if int(execTime) >= 2 and i.velocity <= 1:
+                    i.velocity += 0.2
+        for i in trashGroup:
+            if int(execTime) >= 2 and i.velocity <= 1:
+                    i.velocity += 0.2
+
         if int(execTime) == 27 and minTrash <= 3:
             minTrash += 1
+        for i in bananaGroup:
+            if int(execTime) >= 27 and i.velocity <= 1:
+                    i.velocity += 0.2
+        for i in trashGroup:
+            if int(execTime) >= 27 and i.velocity <= 1:
+                    i.velocity += 0.2
+
         if int(execTime) == 40 and minTrash <= 4:
             minTrash += 1
+        for i in bananaGroup:
+            if int(execTime) >= 40 and i.velocity <= 1.2:
+                    i.velocity += 0.3
+        for i in trashGroup:
+            if int(execTime) >= 40 and i.velocity <= 1.2:
+                    i.velocity += 0.3
+
         if int(execTime) == 55 and minTrash <= 5:
             minTrash += 1
+        for i in bananaGroup:
+            if int(execTime) >= 55 and i.velocity <= 1.5:
+                    i.velocity += 0.4
+        for i in trashGroup:
+            if int(execTime) >= 55 and i.velocity <= 1.5:
+                    i.velocity += 0.4
+
         if int(execTime) == 75 and minTrash <= 6:
             minTrash += 1
         if int(execTime) == 90 and minTrash <= 7:
             minTrash += 1
+        for i in bananaGroup:
+            if int(execTime) >= 90 and i.velocity <= 1.9:
+                    i.velocity += 0.5
+        for i in trashGroup:
+            if int(execTime) >= 90 and i.velocity <= 1.9:
+                    i.velocity += 0.5
+
         if int(execTime) == 105 and minTrash <= 8:
             minTrash += 1
         if int(execTime) == 120 and minTrash <= 9:
             minTrash += 1
+        for i in bananaGroup:
+            if int(execTime) >= 120 and i.velocity <= 2.4:
+                    i.velocity += 0.4
+        for i in trashGroup:
+            if int(execTime) >= 120 and i.velocity <= 2.4:
+                    i.velocity += 0.4
+
         if int(execTime) == 130 and minTrash <= 10:
             minTrash += 1
+        for i in bananaGroup:
+            if int(execTime) >= 130 and i.velocity <= 2.8:
+                    i.velocity += 0.4
+        for i in trashGroup:
+            if int(execTime) >= 130 and i.velocity <= 2.8:
+                    i.velocity += 0.4
+
         if int(execTime) == 140 and minTrash <= 11:
             minTrash += 1
+        for i in bananaGroup:
+            if int(execTime) >= 140 and i.velocity <= 3.2:
+                    i.velocity += 0.4
+        for i in trashGroup:
+            if int(execTime) >= 140 and i.velocity <= 3.2:
+                    i.velocity += 0.4
+
         if int(execTime) == 150 and minTrash <= 12:
             minTrash += 1
+        for i in bananaGroup:
+            if int(execTime) >= 150 and i.velocity <= 3.6:
+                    i.velocity += 0.4
+        for i in trashGroup:
+            if int(execTime) >= 150 and i.velocity <= 3.6:
+                    i.velocity += 0.4
+
         if int(execTime) == 155 and minTrash <= 13:
             minTrash += 1
+        for i in bananaGroup:
+            if int(execTime) >= 155 and i.velocity <= 4:
+                    i.velocity += 0.4
+        for i in trashGroup:
+            if int(execTime) >= 155 and i.velocity <= 4:
+                    i.velocity += 0.4
+
         if int(execTime) == 160 and minTrash <= 14:
             minTrash += 1
+        for i in bananaGroup:
+            if int(execTime) >= 160 and i.velocity <= 4.4:
+                    i.velocity += 0.4
+        for i in trashGroup:
+            if int(execTime) >= 160 and i.velocity <= 4.4:
+                    i.velocity += 0.4
+
         if int(execTime) == 165 and minTrash <= 15:
             minTrash += 1
+        for i in bananaGroup:
+            if int(execTime) >= 165 and i.velocity <= 4.8:
+                    i.velocity += 0.4
+        for i in trashGroup:
+            if int(execTime) >= 165 and i.velocity <= 4.8:
+                    i.velocity += 0.4
+
         if int(execTime) == 170 and minTrash <= 16:
             minTrash += 1
         if int(execTime) == 175 and minTrash <= 17:
@@ -215,10 +309,7 @@ def game():
         if int(execTime) == 210 and minTrash <= 24:
             minTrash += 1
         if int(execTime) == 215 and minTrash <= 25:
-            minTrash += 1
-        
-        print(minTrash)
-    
+            minTrash += 1    
 
         window.fill('white')
         window.blit(background, (0,0))
@@ -230,14 +321,18 @@ def game():
         trashGroup.draw(window)
         trashGroup.update()
 
-        drawText(f"SCORE: {player.score}", 'black', 10,10)
-        drawText(f"LIVES: {player.lives}", 'black', windowWidth-150,10)
+        drawText(f"SCORE: {player.score}", 'white', 10,10)
+        drawText(f"LIVES: {player.lives}", 'white', windowWidth-150,10)
         pygame.display.update()
         pygame.display.flip()
         clock.tick(60)
 
 def gameOver():
     global username
+
+    playerDB = PlayerDB(username=player.username, score=player.score, image=monkeySprite)
+    db.session.add(playerDB)
+    db.session.commit()
 
     while True:
         for event in pygame.event.get():
@@ -279,6 +374,8 @@ for i in range(5):
 
 x = windowWidth/2
 y = windowHeight-monkeySpriteHeight+1
+
+#playerDB = db.session.query(Player).first
 player = Player(x, y, username)
 sprites = pygame.sprite.Group()
 sprites.add(player)
