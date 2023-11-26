@@ -16,6 +16,21 @@ def listar():
     else:
         return jsonify({"result":"error", "details":"bad gateway"})
     
+###############################
+@app.route('/save_image', methods=['POST'])
+def salvar_imagem():
+    try:
+        file_val = request.files['files']
+        arquivoimg = os.path.join(path, 'img/')
+        completo = os.path.join(arquivoimg, 'monkey.png')
+        file_val.save(completo)
+        r = jsonify({'resultado':'ok', 'detalhes':file_val.filename})
+        print(path, arquivoimg)
+    except Exception as e:
+        r = jsonify({'resultado':'erro', 'detalhes':str(e)})
+
+    return r
+    
 db.create_all()
 CORS(app)
 app.run(debug=True)

@@ -18,5 +18,4 @@ db.session.add(p2)
 db.session.add(p3)
 db.session.commit()
 
-print(p1, p2, p3)
 print("Data inserted")

@@ -2,37 +2,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Incluir</title>
+    <title>Import Monkey Image</title>
 </head>
 <body>
-    <h1>Cadastrar player</h1>
-    <form onsubmit="return false;"
-    enctype="multipart/form-data"
-    id="meuform">
+    <h1>Import Monkey Image</h1>
+    <form onsubmit="return false;" enctype="multipart/form-data" id="meuform">
+        <h4>Import a sprite</h4>
+        <input type="file" name="files" id="campoImagem">
 
-        <h5>Nome</h5>
-        <input type="text" name="nome" id="campoNome">
-
-        <h5>E-mail</h5>
-        <input type="text" name="email" id="campoEmail">
-
-        <h5>Foto</h5>
-        <input type="file" name="foto" id="campoFoto">
-
-        <button id="btIncluir">Cadastrar</button>
+        <button id="btIncluir">Register</button>
     </form>
-
-    <button id="btListar">Listar</button>
-    <table>
-        <thead>
-            <tr>
-                <th scope="col">Nome</th>
-                <th scope="col">Email</th>
-                <th scope="col">Foto</th>
-            </tr>
-        </thead>
-        <tbody id="corpoTabelaPessoas"></tbody>
-    </table>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 

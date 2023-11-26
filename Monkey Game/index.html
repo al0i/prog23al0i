@@ -5,15 +5,14 @@
     <title>Ranking</title>
 </head>
 <body>
+    <a href="incluir.html">Import a monkey</a>
     <h1>Monkey Game</h1>
     <h2>Best Players:</h2>
     <table>
         <thead>
             <tr>
-                <th>id</th>
                 <th>username</th>
                 <th>score</th>
-                <th>image</th>
             </tr>
         </thead>
         <tbody id="players"></tbody>
@@ -23,7 +22,7 @@
     <script src="utils.js"></script>
     <script>
         $(function(){
-            listing(['id', 'username', 'score', 'image'])
+            listing(['username', 'score'])
         })
     </script>
 </body>

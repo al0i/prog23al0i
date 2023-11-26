@@ -34,10 +34,15 @@ while monkeySpriteWidth > 130 or monkeySpriteHeight > 130:
         monkeySpriteWidth = monkeySpriteLocale.get_width()/count
         monkeySpriteHeight = monkeySpriteLocale.get_height()/count
         count+=0.1
-while monkeySpriteWidth < 90 or monkeySpriteHeight < 90:
-        monkeySpriteWidth = monkeySpriteLocale.get_width()*count
-        monkeySpriteHeight = monkeySpriteLocale.get_height()*count
-        count+=0.1
+        print('A', monkeySpriteWidth, monkeySpriteHeight)
+if monkeySpriteWidth < 90 and monkeySpriteHeight < 90:
+    while monkeySpriteWidth < 90 or monkeySpriteHeight < 90:
+            monkeySpriteWidth = monkeySpriteLocale.get_width()*count
+            monkeySpriteHeight = monkeySpriteLocale.get_height()*count
+            count+=0.1
+            print('B',monkeySpriteWidth, monkeySpriteHeight)
+monkeySpriteLocale = pygame.transform.scale(monkeySpriteLocale, (monkeySpriteWidth, monkeySpriteHeight))
+
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y, username):
