@@ -15,8 +15,7 @@ def listar():
         return jsonify(okJson)
     else:
         return jsonify({"result":"error", "details":"bad gateway"})
-    
-###############################
+
 @app.route('/save_image', methods=['POST'])
 def salvar_imagem():
     try:

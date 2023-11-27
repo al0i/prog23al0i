@@ -1,8 +1,5 @@
 from config import *
 
-#player image (limited at 180x180)
-#monkeySprite = pygame.image.load(f'{path}/img/monkey.png')
-
 class PlayerDB(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.Text)
