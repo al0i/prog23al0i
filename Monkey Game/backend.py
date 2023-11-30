@@ -1,5 +1,5 @@
 from config import *
-from player import *
+from table.player import *
 
 @app.route('/')
 def index():

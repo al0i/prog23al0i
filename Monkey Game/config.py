@@ -6,7 +6,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 path = os.path.dirname(os.path.abspath(__file__))
-fileDB = os.path.join(path, 'players.db')
+fileDB = os.path.join(path, 'table/players.db')
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///"+fileDB
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
