@@ -1,5 +1,5 @@
 from config import *
-from player import *
+from table.player import *
 
 p1 = PlayerDB(username='sigmund-freud',
             score=180,
