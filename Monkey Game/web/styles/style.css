@@ -1,0 +1,35 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    width: 100vw;
+    background-color: #ffd139;
+}
+
+body img{
+    width: 80vw;
+    max-width: 600;
+}
+
+.table{
+    margin: auto;
+}
+
+.container{
+    margin-top: 15vh;
+    background-color: #ffd139;
+}
+
+input{
+    max-width: 400px;
+}
+
+.form-control{
+    margin: auto;
+}
+
+.btn-dark{
+    margin-top: 15px;
+}
